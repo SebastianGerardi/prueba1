@@ -1,0 +1,17 @@
+Luli Pampín y la Radio Mágica — After Effects 2025
+==================================================
+
+1. Descomprime esta carpeta (deja juntos LuliRadioMagica.jsx y musica.wav).
+2. Abre After Effects 2025.
+3. Archivo > Scripts > Ejecutar archivo de script...  y elige LuliRadioMagica.jsx
+4. Se crea la composición "Luli y la Radio Mágica" (1280x720, 30 fps, 10 s) con la música.
+5. Pulsa la barra espaciadora para verla. Para exportar: Composición > Añadir a la cola de Adobe Media Encoder.
+
+Estructura:
+- CAM (zoom y temblor): nulo que controla la "cámara".
+- RADIO (control) / LULI (control): nulos que mueven a cada personaje. Las partes
+  (ojos, boca, pelo, brazos, trenzas...) son capas de forma separadas y editables.
+- Las animaciones repetitivas (baile, canto, notas, ondas, confeti) usan expresiones;
+  las entradas, el destello, el guiño y el título usan fotogramas clave.
+
+Si aparece algún error al ejecutarlo, copia el mensaje y envíalo para corregirlo.
