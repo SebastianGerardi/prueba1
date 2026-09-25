@@ -155,13 +155,14 @@
     }
   }
   function keys(prop, list, hold) {
+    if (!prop) return;
     for (var k = 0; k < list.length; k++) prop.setValueAtTime(list[k][0], list[k][1]);
     if (hold) {
       for (k = 1; k <= prop.numKeys; k++) prop.setInterpolationTypeAtKey(k, KeyframeInterpolationType.HOLD, KeyframeInterpolationType.HOLD);
     } else ease(prop);
   }
   function X(layer, name) { return tr(layer).property(name); }
-  function expr(prop, lines) { prop.expression = (lines instanceof Array) ? lines.join("\n") : lines; }
+  function expr(prop, lines) { if (!prop) return; try { prop.expression = (lines instanceof Array) ? lines.join("\n") : lines; } catch (e) {} }
   function effect(layer, match) { return layer.property("ADBE Effect Parade").addProperty(match); }
   function blur(layer, amount) {
     try { effect(layer, "ADBE Gaussian Blur 2").property("ADBE Gaussian Blur 2-0001").setValue(amount); } catch (e) {}
@@ -232,7 +233,7 @@
     fill(c, "#ffe9a8");
   });
   keys(X(burst, "ADBE Opacity"), [[3.6, 0], [4.6, 35]]);
-  expr(X(burst, "ADBE Rotation"), "time * 20");
+  expr(X(burst, "ADBE Rotate Z"), "time * 20");
 
   function cloudGroup(layer, name, x, y, s, col, op) {
     G(layer, name, function (c) {
@@ -266,7 +267,7 @@
     fill(c, "#ffffff");
   });
   keys(X(speed, "ADBE Opacity"), [[2.7, 0], [3.5, 85], [3.62, 0]]);
-  expr(X(speed, "ADBE Rotation"), "posterizeTime(15); random(0, 360)");
+  expr(X(speed, "ADBE Rotate Z"), "posterizeTime(15); random(0, 360)");
 
   // Ondas de sonido (arcos arcoíris que se expanden)
   var RING_COLS = ["#ff7cc4", "#ffd84d", "#5ee6d8", "#b48bff", "#ff9b54", "#7dff9b"];
@@ -314,7 +315,7 @@
     "var q = pulse * 0.07 * on;",
     "[value[0] * (1 + q - sur * 0.06), value[1] * (1 - q + sur * 0.1)];"
   ]);
-  expr(X(RADIO, "ADBE Rotation"), [
+  expr(X(RADIO, "ADBE Rotate Z"), [
     E_SWAY,
     "var k = Math.max(0, Math.min(1, (time - 2.8) / 0.75)) * (time < 3.7 ? 1 : 0);",
     "time < 3.6 ? Math.sin(time * 60) * 2.5 * k : -sw * 3.4;"
@@ -350,7 +351,7 @@
       }
       stroke(c, "#efe4ff", 3);
     });
-    expr(X(reel, "ADBE Rotation"), "time > 1.7 ? (time - 1.7) * 230 : 0");
+    expr(X(reel, "ADBE Rotate Z"), "time > 1.7 ? (time - 1.7) * 230 : 0");
   }
 
   // Ojos-altavoz
@@ -448,7 +449,7 @@
     ease(po);
   })();
   expr(X(LULI, "ADBE Position"), "var b = " + BEAT + "; sub(value, [0, Math.abs(Math.sin(Math.max(0, time - 3.6) * Math.PI / b)) * 11]);");
-  expr(X(LULI, "ADBE Rotation"), [E_SWAY, "sw * 2.3;"]);
+  expr(X(LULI, "ADBE Rotate Z"), [E_SWAY, "sw * 2.3;"]);
 
   // Capa (amarilla)
   var cape = shp("Luli - capa", LULI, [0, 104]);
@@ -466,7 +467,7 @@
     path(c, new P().M(-20, 120).C(-40, 200, -30, 300, -10, 360).L(20, 360).C(10, 300, 0, 200, 20, 120), true);
     fill(c, "#fff1b0", 55);
   });
-  expr(X(cape, "ADBE Rotation"), [E_SWAY, "Math.sin(time * 3) * 1.5 + sw * 2;"]);
+  expr(X(cape, "ADBE Rotate Z"), [E_SWAY, "Math.sin(time * 3) * 1.5 + sw * 2;"]);
 
   // Trenzas
   function braidLayer(name, x0, y0, x1, y1, cx, cy, withBow) {
@@ -493,7 +494,7 @@
       }, { pos: [x1, y1] });
       G(l, "nudo", function (c) { ell(c, 0, 1, 14, 14); fs(c, "#f5b23a", 2.5); }, { pos: [x1, y1] });
     }
-    expr(X(l, "ADBE Rotation"), [E_SWAY, "-sw * 3 + Math.sin(time * 2.4) * 1.5;"]);
+    expr(X(l, "ADBE Rotate Z"), [E_SWAY, "-sw * 3 + Math.sin(time * 2.4) * 1.5;"]);
     return l;
   }
   braidLayer("Luli - trenza izquierda", -70, 60, -118, 300, -120, 170, false);
@@ -512,7 +513,7 @@
     path(c, new P().M(70, 20).Q(86, 120, 96, 200).L(84, 196).Q(72, 120, 60, 40), true);
     fill(c, HAIR_SH, 70);
   });
-  expr(X(backHair, "ADBE Rotation"), [E_SWAY, "-sw * 1.2;"]);
+  expr(X(backHair, "ADBE Rotate Z"), [E_SWAY, "-sw * 1.2;"]);
 
   // Piernas y botas
   var legs = shp("Luli - piernas", LULI);
@@ -572,7 +573,7 @@
   // Cabeza (nulo con inclinación)
   var HEAD = nul("Luli - CABEZA", [0, 20], LULI);
   X(HEAD, "ADBE Anchor Point").setValue([0, 20]);
-  expr(X(HEAD, "ADBE Rotation"), [E_SWAY, "sw * 3.4;"]);
+  expr(X(HEAD, "ADBE Rotate Z"), [E_SWAY, "sw * 3.4;"]);
 
   var face = shp("Luli - cara", HEAD);
   G(face, "cara", function (c) {
@@ -698,7 +699,7 @@
   var clip = shp("Luli - horquilla estrella", HEAD, [64, -58]);
   G(clip, "estrella", function (c) { star(c, 64, -58, 5, 15, 6.75, 17); fs(c, "#ffe14d", 3); });
   G(clip, "corazon", function (c) { path(c, heartPath(80, -44, 7), true); fs(c, "#ff8cc6", 2); });
-  expr(X(clip, "ADBE Rotation"), "Math.sin(time * 3) * 3;");
+  expr(X(clip, "ADBE Rotate Z"), "Math.sin(time * 3) * 3;");
 
   // Brazos
   function sparkles(c, a, b, n) {
@@ -718,7 +719,7 @@
     ell(c, 6, -16, 10, 20);
     fs(c, GLOVE, 2.5);
   }, { pos: [-150, 150], rot: -28 });
-  expr(X(armL, "ADBE Rotation"), "Math.sin(time * 4) * 4;");
+  expr(X(armL, "ADBE Rotate Z"), "Math.sin(time * 4) * 4;");
 
   var armR = shp("Luli - brazo derecho (puño)", LULI, [56, 116]);
   G(armR, "brazo", function (c) { path(c, new P().M(56, 116).L(118, 150), false); line2(c, SKIN, 22); });
@@ -730,7 +731,7 @@
     path(c, new P().M(98, 55).L(98, 66), false); path(c, new P().M(108, 55).L(108, 66), false); stroke(c, INK, 2);
   });
   G(armR, "pulgar", function (c) { ell(c, 90, 74, 12, 18); fs(c, GLOVE, 2); });
-  expr(X(armR, "ADBE Rotation"), [E_BEAT, "time > 3.6 ? -pulse * 8 : 0;"]);
+  expr(X(armR, "ADBE Rotate Z"), [E_BEAT, "time > 3.6 ? -pulse * 8 : 0;"]);
 
   // Chispa del guiño
   var winkFx = shp("Chispa del guiño", CAM, [0, 0], [600, 200]);
@@ -738,7 +739,7 @@
   G(winkFx, "estrella2", function (c) { star(c, 36, -34, 4, 18, 3, 0); fill(c, "#ffffff"); });
   G(winkFx, "corazon", function (c) { path(c, heartPath(50, 20, 14), true); fill(c, "#ff5fa2"); });
   keys(X(winkFx, "ADBE Scale"), [[7.35, [0, 0]], [7.65, [100, 100]], [7.95, [0, 0]]]);
-  expr(X(winkFx, "ADBE Rotation"), "time * 180");
+  expr(X(winkFx, "ADBE Rotate Z"), "time * 180");
   glow(winkFx, 25, 1.2);
 
   /* ================================================================== NOTAS Y CORAZONES */
@@ -761,7 +762,7 @@
     expr(X(nt, "ADBE Scale"), [head,
       "var k = Math.min(1, age / 0.3); var s = (u < 0 ? 0 : sz * 100 * (k < 1 ? (1 + 2.70158 * Math.pow(k - 1, 3) + 1.70158 * Math.pow(k - 1, 2)) : 1)); [s, s];"]);
     expr(X(nt, "ADBE Opacity"), [head, "u < 0 ? 0 : 100 * Math.min(1, (life - age) / 0.7);"]);
-    expr(X(nt, "ADBE Rotation"), "Math.sin(time * 4 + index) * 18;");
+    expr(X(nt, "ADBE Rotate Z"), "Math.sin(time * 4 + index) * 18;");
     glow(nt, 15, 0.8);
     nt.motionBlur = true;
   }
@@ -797,7 +798,7 @@
     var cexp = "seedRandom(index, true); var x0 = random(0, " + W + "), vy = random(120, 340), vx = random(-60, 60), d = random(0, 0.6), r0 = random(0, 360), vr = random(-500, 500);\n" +
       "var age = time - 8 - d;\n";
     expr(X(cf, "ADBE Position"), cexp + "age < 0 ? [-100, -100] : [x0 + vx * age + Math.sin(age * 3 + r0) * 20, -20 + vy * age];");
-    expr(X(cf, "ADBE Rotation"), cexp + "r0 + vr * Math.max(0, age);");
+    expr(X(cf, "ADBE Rotate Z"), cexp + "r0 + vr * Math.max(0, age);");
     expr(X(cf, "ADBE Scale"), cexp + "[100, 100 * Math.cos(Math.max(0, age) * 6 + r0)];");
   }
 
